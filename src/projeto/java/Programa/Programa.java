@@ -15,9 +15,13 @@ public class Programa {
 		System.out.println(cidade);
 		
 		System.out.println("*****Testando insert*****");
-		cidade = new Cidade(null, "Araruna", "Teste 1");
-		cidadeDao.insert(cidade);
+		Cidade newCidade = new Cidade(null, "Araruna", "Teste 1");
+		cidadeDao.insert(newCidade);
 		System.out.println("Insert executado!");
+		
+		System.out.println("*****Testando busca por Id*****");
+		cidade = cidadeDao.buscaPorId(1);
+	    System.out.println(cidade);
 		
 	}
 }

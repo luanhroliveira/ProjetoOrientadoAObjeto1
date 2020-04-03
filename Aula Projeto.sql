@@ -8,3 +8,11 @@ INSERT INTO Cidade
 	(nome, descricao)
 VALUES
 	(?,?)
+
+SELECT 
+	c.idCidade as 'Cód. Cidade',
+	c.nome as 'Nome',
+	c.descricao as 'Descrição'
+FROM
+	CIDADE c
+WHERE idCidade = ?

@@ -67,7 +67,46 @@ public class CidadeDaoJDBC implements CidadeDao{
 
 	@Override
 	public Cidade buscaPorId(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"SELECT " 
+					+ "c.idCidade as 'Cód. Cidade', "
+					+ "c.nome as 'Nome', "
+					+ "c.descricao as 'Descrição' "
+					+ "FROM "
+					+ "CIDADE c "
+					+ "WHERE idCidade = ?"
+					);
+		
+			st.setInt(1, id);
+		
+			rs = st.executeQuery();
+			
+			if(rs.next()) {
+				Cidade obj = instanciarCidade(rs);
+				return obj;
+			}else {
+				return null;
+			}
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+	}
+
+	private Cidade instanciarCidade(ResultSet rs) throws SQLException {
+		Cidade obj = new Cidade();
+		obj.setIdCidade(rs.getInt("Cód. Cidade"));
+		obj.setNome(rs.getString("Nome"));
+		obj.setDescricao(rs.getString("Descrição"));
+		
+		return obj;
 	}
 }
