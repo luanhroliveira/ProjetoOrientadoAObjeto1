@@ -3,3 +3,8 @@ CREATE TABLE Cidade(
 	Nome VARCHAR(32) NOT NULL,
 	Descricao VARCHAR(32)
 );
+
+INSERT INTO Cidade
+	(nome, descricao)
+VALUES
+	(?,?)
