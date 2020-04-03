@@ -1,5 +1,7 @@
 package projeto.java.Programa;
 
+import java.util.List;
+
 import projeto.java.modelo.dao.CidadeDao;
 import projeto.java.modelo.dao.DaoFactory;
 import projeto.java.modelo.entidades.Cidade;
@@ -32,5 +34,11 @@ public class Programa {
 		cidade.setDescricao("Teste UPDATE");
 		cidadeDao.update(cidade);
 		System.out.println("Update executado!");
+		
+		System.out.println("*****Testando busca completa*****");
+		List<Cidade> cidadeList = cidadeDao.buscaCompleta();
+		for(Cidade cid : cidadeList) {
+			System.out.println(cid);
+		}
 	}
 }

@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import projeto.java.db.DB;
 import projeto.java.db.DbException;
@@ -31,7 +33,6 @@ public class CidadeDaoJDBC implements CidadeDao{
 					+ "(?,?)",
 					Statement.RETURN_GENERATED_KEYS
 					);
-		
 			st.setString(1, obj.getNome());
 			st.setString(2, obj.getDescricao());
 			
@@ -67,8 +68,8 @@ public class CidadeDaoJDBC implements CidadeDao{
 					+ "Nome = ?, "
 					+ "Descricao = ? "
 					+ "WHERE "
-					+ "idCidade = ?");
-			
+					+ "idCidade = ?"
+					);
 			st.setString(1, obj.getNome());
 			st.setString(2, obj.getDescricao());
 			st.setInt(3, obj.getIdCidade());
@@ -121,7 +122,6 @@ public class CidadeDaoJDBC implements CidadeDao{
 					+ "CIDADE c "
 					+ "WHERE idCidade = ?"
 					);
-		
 			st.setInt(1, id);
 		
 			rs = st.executeQuery();
@@ -149,5 +149,37 @@ public class CidadeDaoJDBC implements CidadeDao{
 		obj.setDescricao(rs.getString("Descrição"));
 		
 		return obj;
+	}
+
+	@Override
+	public List<Cidade> buscaCompleta() {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"SELECT "
+					+ "c.idCidade as 'Cód. Cidade', "
+					+ "c.nome as 'Nome', "
+					+ "c.descricao as 'Descrição' "
+					+ "FROM "
+					+ "CIDADE c"
+					);
+			rs = st.executeQuery();
+			
+			List<Cidade> cidadeList = new ArrayList<>();
+			
+			while(rs.next()) {
+				Cidade cidade = instanciarCidade(rs);
+				cidadeList.add(cidade);
+			}
+			return cidadeList;
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 }
