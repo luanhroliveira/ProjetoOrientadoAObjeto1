@@ -16,3 +16,8 @@ SELECT
 FROM
 	CIDADE c
 WHERE idCidade = ?
+
+DELETE FROM
+	Cidade
+WHERE
+	idCidade = ?

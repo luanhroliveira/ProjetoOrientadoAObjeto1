@@ -22,6 +22,10 @@ public class Programa {
 		System.out.println("*****Testando busca por Id*****");
 		cidade = cidadeDao.buscaPorId(1);
 	    System.out.println(cidade);
+	    
+	    System.out.println("*****Testando delete por Id*****");
+		cidadeDao.deletePorId(1);
+		System.out.println("Delete executado!");
 		
 	}
 }
