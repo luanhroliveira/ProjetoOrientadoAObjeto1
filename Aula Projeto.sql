@@ -21,3 +21,11 @@ DELETE FROM
 	Cidade
 WHERE
 	idCidade = ?
+
+UPDATE 
+	Cidade
+SET
+	Nome = ?,
+	Descricao = ?
+WHERE
+	idCidade = ?

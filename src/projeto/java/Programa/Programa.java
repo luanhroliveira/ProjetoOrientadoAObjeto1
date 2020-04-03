@@ -27,5 +27,10 @@ public class Programa {
 		cidadeDao.deletePorId(1);
 		System.out.println("Delete executado!");
 		
+		System.out.println("*****Testando update*****");
+		cidadeDao.buscaPorId(1);
+		cidade.setDescricao("Teste UPDATE");
+		cidadeDao.update(cidade);
+		System.out.println("Update executado!");
 	}
 }

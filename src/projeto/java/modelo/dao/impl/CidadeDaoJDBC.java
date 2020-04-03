@@ -57,7 +57,30 @@ public class CidadeDaoJDBC implements CidadeDao{
 
 	@Override
 	public void update(Cidade obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"UPDATE "
+					+ "Cidade "
+					+ "SET "
+					+ "Nome = ?, "
+					+ "Descricao = ? "
+					+ "WHERE "
+					+ "idCidade = ?");
+			
+			st.setString(1, obj.getNome());
+			st.setString(2, obj.getDescricao());
+			st.setInt(3, obj.getIdCidade());
+			
+			st.executeUpdate();
+		}
+		catch(SQLException e){
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
@@ -70,8 +93,7 @@ public class CidadeDaoJDBC implements CidadeDao{
 					+ "Cidade "
 					+ "WHERE "
 					+ "idCidade = ?"
-					);
-			
+					);	
 			st.setInt(1, id);
 			
 			st.executeUpdate();
@@ -82,7 +104,6 @@ public class CidadeDaoJDBC implements CidadeDao{
 		finally {
 			DB.closeStatement(st);
 		}
-	
 	}
 
 	@Override
