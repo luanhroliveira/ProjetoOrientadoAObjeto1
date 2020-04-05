@@ -27,7 +27,7 @@ public class MainViewControle implements Initializable{
 	
 	@FXML
 	public void onMenuItemCidadeAcao() {
-		System.out.println("Teste item cidade");
+		loadView("/projeto/java/gui/CidadeList.fxml");
 	}
 	
 	@FXML
