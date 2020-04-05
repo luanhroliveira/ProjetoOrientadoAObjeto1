@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox prefHeight="364.0" prefWidth="538.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
+<VBox prefHeight="364.0" prefWidth="538.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projeto.java.gui.CidadeListControle">
    <children>
       <Label text="Cidades">
          <font>
@@ -19,14 +18,14 @@
       </Label>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
-          <Button mnemonicParsing="false" text="Button" />
+          <Button fx:id="btAdicionar" mnemonicParsing="false" onAction="#onBtAdicionarAcao" text="Adicionar" />
         </items>
       </ToolBar>
-      <TableView prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="tableViewCidade" prefHeight="200.0" prefWidth="200.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Id" />
-          <TableColumn prefWidth="75.0" text="Nome" />
-            <TableColumn prefWidth="75.0" text="Descrição" />
+          <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="Id" />
+          <TableColumn fx:id="tableColumnNome" prefWidth="75.0" text="Nome" />
+            <TableColumn fx:id="tableColumnDescricao" prefWidth="75.0" text="Descrição" />
         </columns>
       </TableView>
    </children>
