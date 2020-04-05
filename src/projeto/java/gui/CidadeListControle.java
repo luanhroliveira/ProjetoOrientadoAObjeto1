@@ -51,8 +51,8 @@ public class CidadeListControle implements Initializable{
 
 	private void initialieNodes() {
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("Id"));
-		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("Nome"));
-		tableColumnDescricao.setCellValueFactory(new PropertyValueFactory<>("Descrição"));
+		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+		tableColumnDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
 		
 		Stage stage =(Stage) Main.getMainScene().getWindow();
 		

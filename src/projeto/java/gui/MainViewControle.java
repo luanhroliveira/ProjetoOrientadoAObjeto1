@@ -3,6 +3,7 @@ package projeto.java.gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import projeto.java.Programa.Main;
 import projeto.java.gui.util.Alertas;
+import projeto.java.modelo.servicos.CidadeServico;
 
 public class MainViewControle implements Initializable{
 
@@ -27,7 +29,10 @@ public class MainViewControle implements Initializable{
 	
 	@FXML
 	public void onMenuItemCidadeAcao() {
-		loadView("/projeto/java/gui/CidadeList.fxml");
+		loadView("/projeto/java/gui/CidadeList.fxml", (CidadeListControle controle) -> {
+			controle.setCidadeServico(new CidadeServico());
+			controle.atualizaTableView();
+		});
 	}
 	
 	@FXML
@@ -37,14 +42,14 @@ public class MainViewControle implements Initializable{
 	
 	@FXML
 	public void onMenuItemSobreAcao() {
-		loadView("/projeto/java/gui/Sobre.fxml");
+		loadView("/projeto/java/gui/Sobre.fxml", x -> {});
 	}
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 	}
 	
-	private void loadView(String nomeAbsoluto) {
+	private <T> void loadView(String nomeAbsoluto, Consumer<T> AcaoDeInicializacao) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsoluto));
 			VBox newVBox = loader.load();
@@ -56,6 +61,9 @@ public class MainViewControle implements Initializable{
 			mainVBox.getChildren().clear();
 			mainVBox.getChildren().add(mainMenu);
 			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
+			T controle = loader.getController();
+			AcaoDeInicializacao.accept(controle);
 			
 		} catch (IOException e) {
 			Alertas.showAlert("IO Exception", "Erro ao carregar view", e.getMessage(), AlertType.ERROR);
