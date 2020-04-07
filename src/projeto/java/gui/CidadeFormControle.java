@@ -1,16 +1,19 @@
 package projeto.java.gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import projeto.java.db.DbException;
+import projeto.java.gui.listeners.DataChangeListener;
 import projeto.java.gui.util.Alertas;
 import projeto.java.gui.util.Restricoes;
 import projeto.java.gui.util.Utils;
@@ -22,6 +25,8 @@ public class CidadeFormControle implements Initializable{
 	private Cidade entidade;
 	
 	private CidadeServico cidadeServico;
+	
+	private List<DataChangeListener> listaDeDadosAlterados = new ArrayList<>();
 	
 	@FXML
 	private TextField txtId;
@@ -46,6 +51,10 @@ public class CidadeFormControle implements Initializable{
 		this.cidadeServico = cidadeServico;
 	}
 	
+	public void subscreveDadosAlterados(DataChangeListener listener) {
+		listaDeDadosAlterados.add(listener);
+	}
+	
 	@FXML
 	public void onBtSalvarAcao(ActionEvent event) {
 		if(entidade == null) {
@@ -57,6 +66,7 @@ public class CidadeFormControle implements Initializable{
 		try {
 			entidade = getFormDado();
 			cidadeServico.salvaOuEdita(entidade);
+			notificaDadosAlterados();
 			Utils.estagioAtual(event).close();
 		}
 		catch(DbException e){
@@ -64,6 +74,12 @@ public class CidadeFormControle implements Initializable{
 		}
 	}
 	
+	private void notificaDadosAlterados() {
+		for(DataChangeListener listener: listaDeDadosAlterados) {
+			listener.onDadoAlterado();
+		}
+	}
+
 	private Cidade getFormDado() {
 		Cidade obj = new Cidade();
 		

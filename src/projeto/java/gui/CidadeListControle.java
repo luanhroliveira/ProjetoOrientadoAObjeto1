@@ -21,11 +21,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import projeto.java.Programa.Main;
+import projeto.java.gui.listeners.DataChangeListener;
 import projeto.java.gui.util.Alertas;
 import projeto.java.modelo.entidades.Cidade;
 import projeto.java.modelo.servicos.CidadeServico;
 
-public class CidadeListControle implements Initializable{
+public class CidadeListControle implements Initializable, DataChangeListener{
 
 	private CidadeServico servico;
 	@FXML
@@ -41,6 +42,8 @@ public class CidadeListControle implements Initializable{
 	private Button btAdicionar;
 	
 	private ObservableList<Cidade> obsList;
+	
+	
 	
 	@FXML
 	public void onBtAdicionarAcao(ActionEvent event) {
@@ -85,6 +88,7 @@ public class CidadeListControle implements Initializable{
 			CidadeFormControle controle = loader.getController();
 			controle.setCidade(obj);
 			controle.setCidadeServico(new CidadeServico());
+			controle.subscreveDadosAlterados(this);
 			controle.atualizaFormDado();
 			
 			Stage dialogoStage = new Stage();
@@ -99,5 +103,10 @@ public class CidadeListControle implements Initializable{
 		catch(IOException e) {
 			Alertas.showAlert("IO Exception", "Erro ao carregar view", e.getMessage(), AlertType.ERROR);
 		}
+	}
+
+	@Override
+	public void onDadoAlterado() {
+		atualizaTableView();
 	}
 }
