@@ -28,7 +28,6 @@ import projeto.java.modelo.servicos.CidadeServico;
 public class CidadeListControle implements Initializable{
 
 	private CidadeServico servico;
-	
 	@FXML
 	private TableView<Cidade> tableViewCidade;
 	
@@ -46,7 +45,8 @@ public class CidadeListControle implements Initializable{
 	@FXML
 	public void onBtAdicionarAcao(ActionEvent event) {
 		Stage parentStage = projeto.java.gui.util.Utils.estagioAtual(event);
-		createDialogoForm("/projeto/java/gui/CidadeForm.fxml", parentStage);	
+		Cidade obj = new Cidade();
+		createDialogoForm(obj, "/projeto/java/gui/CidadeForm.fxml", parentStage);	
 	}
 	
 	public void setCidadeServico(CidadeServico servico) {
@@ -66,23 +66,26 @@ public class CidadeListControle implements Initializable{
 		Stage stage =(Stage) Main.getMainScene().getWindow();
 		
 		tableViewCidade.prefHeightProperty().bind(stage.heightProperty());
-		
 	}
 	
 	public void atualizaTableView() {
 		if(servico == null) {
 			throw new IllegalStateException("Serviço nulo.");
 		}
-		
 		List<Cidade> cidadeList = servico.buscaCompleta();
 		obsList = FXCollections.observableArrayList(cidadeList);
 		tableViewCidade.setItems(obsList);
 	}
 	
-	private void createDialogoForm(String nomeAbsoluto, Stage parentStage) {
+	private void createDialogoForm(Cidade obj, String nomeAbsoluto, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeAbsoluto));
 			Pane pane = loader.load();
+			
+			CidadeFormControle controle = loader.getController();
+			controle.setCidade(obj);
+			controle.setCidadeServico(new CidadeServico());
+			controle.atualizaFormDado();
 			
 			Stage dialogoStage = new Stage();
 			dialogoStage.setTitle("Entre com os dados da cidade");
@@ -97,5 +100,4 @@ public class CidadeListControle implements Initializable{
 			Alertas.showAlert("IO Exception", "Erro ao carregar view", e.getMessage(), AlertType.ERROR);
 		}
 	}
-	
 }
