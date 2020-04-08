@@ -40,6 +40,9 @@ public class CidadeListControle implements Initializable, DataChangeListener{
 	private TableColumn<Cidade, String> tableColumnDescricao;
 	@FXML
 	private Button btAdicionar;
+	@FXML
+	private Button btPesquisar;
+	
 	
 	private ObservableList<Cidade> obsList;
 	
@@ -50,6 +53,16 @@ public class CidadeListControle implements Initializable, DataChangeListener{
 		Stage parentStage = projeto.java.gui.util.Utils.estagioAtual(event);
 		Cidade obj = new Cidade();
 		createDialogoForm(obj, "/projeto/java/gui/CidadeForm.fxml", parentStage);	
+	}
+	
+	@FXML
+	public void onBtPesquisarAcao() {
+		if(servico == null) {
+			throw new IllegalStateException("Serviço nulo.");
+		}
+		List<Cidade> cidadeList = servico.buscaCompleta();
+		obsList = FXCollections.observableArrayList(cidadeList);
+		tableViewCidade.setItems(obsList);
 	}
 	
 	public void setCidadeServico(CidadeServico servico) {

@@ -3,7 +3,9 @@ package projeto.java.gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +20,7 @@ import projeto.java.gui.util.Alertas;
 import projeto.java.gui.util.Restricoes;
 import projeto.java.gui.util.Utils;
 import projeto.java.modelo.entidades.Cidade;
+import projeto.java.modelo.exceptions.ValidadtionException;
 import projeto.java.modelo.servicos.CidadeServico;
 
 public class CidadeFormControle implements Initializable{
@@ -69,6 +72,9 @@ public class CidadeFormControle implements Initializable{
 			notificaDadosAlterados();
 			Utils.estagioAtual(event).close();
 		}
+		catch(ValidadtionException e) {
+			setErroMensagem(e.getErros());
+		}
 		catch(DbException e){
 			Alertas.showAlert("Erro ao salvar objeto", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -83,10 +89,19 @@ public class CidadeFormControle implements Initializable{
 	private Cidade getFormDado() {
 		Cidade obj = new Cidade();
 		
+		ValidadtionException exception = new ValidadtionException("Erro de validação.");
+		
 		obj.setIdCidade(Utils.tryParseToInt(txtId.getText()));
+		
+		if(txtNome.getText() == null || txtNome.getText().trim().equals("")) {
+			exception.addErro("nome", "O campo 'nome' não pode ser vazio.");
+		}
 		obj.setNome(txtNome.getText());
 		obj.setDescricao(txtDescricao.getText());
 		
+		if(exception.getErros().size() > 0) {
+			throw exception;
+		}
 		return obj;
 	}
 
@@ -114,4 +129,14 @@ public class CidadeFormControle implements Initializable{
 		txtNome.setText(entidade.getNome());
 		txtDescricao.setText(entidade.getDescricao());
 	}
+	
+	private void setErroMensagem(Map<String, String> erro) {
+		Set<String> fields = erro.keySet();
+		
+		if(fields.contains("nome")) {
+			labelErroNome.setText(erro.get("nome"));
+		}
+		
+	}
+	
 }
