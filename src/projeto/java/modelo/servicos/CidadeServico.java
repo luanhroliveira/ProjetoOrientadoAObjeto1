@@ -22,4 +22,8 @@ public class CidadeServico {
 			dao.update(obj);
 		}
 	}
+	
+	public void remove(Cidade obj) {
+		dao.deletePorId(obj.getIdCidade());
+	}
 }

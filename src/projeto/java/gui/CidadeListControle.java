@@ -3,6 +3,7 @@ package projeto.java.gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -15,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,6 +25,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import projeto.java.Programa.Main;
+import projeto.java.db.DbIntegrityException;
 import projeto.java.gui.listeners.DataChangeListener;
 import projeto.java.gui.util.Alertas;
 import projeto.java.gui.util.Utils;
@@ -42,6 +45,8 @@ public class CidadeListControle implements Initializable, DataChangeListener{
 	private TableColumn<Cidade, String> tableColumnDescricao;
 	@FXML
 	private TableColumn<Cidade, Cidade> tableColumnEDITAR;
+	@FXML
+	private TableColumn<Cidade, Cidade> tableColumnREMOVER;
 	@FXML
 	private Button btAdicionar;
 	@FXML
@@ -93,6 +98,7 @@ public class CidadeListControle implements Initializable, DataChangeListener{
 		obsList = FXCollections.observableArrayList(cidadeList);
 		tableViewCidade.setItems(obsList);
 		initEditarBotao();
+		initRemoverBotao();
 	}
 	
 	private void createDialogoForm(Cidade obj, String nomeAbsoluto, Stage parentStage) {
@@ -142,5 +148,41 @@ public class CidadeListControle implements Initializable, DataChangeListener{
 						event -> createDialogoForm(obj, "/projeto/java/gui/CidadeForm.fxml", Utils.estagioAtual(event)));
 			}
 		});
+	}
+	
+	private void initRemoverBotao() {
+		tableColumnREMOVER.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnREMOVER.setCellFactory(param -> new TableCell<Cidade, Cidade>() {
+			private final Button button = new Button("remove");
+
+			@Override
+			protected void updateItem(Cidade obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(event -> removeEntidade(obj));
+			}
+		});
+	}
+
+	private void removeEntidade(Cidade obj) {
+		Optional<ButtonType> result = Alertas.showConfirmation("Confirmação", "Deseja remover esta cidade?");
+		
+		if(result.get() == ButtonType.OK) {
+			
+			if(servico == null) {
+				throw new IllegalStateException("Serviço não pode ser nulo");
+			}
+			try {
+				servico.remove(obj);	
+				atualizaTableView();
+			}
+			catch(DbIntegrityException e) {
+				Alertas.showAlert("Erro em remover cidade", null, e.getMessage(), AlertType.ERROR);
+			}
+		}
 	}
 }
